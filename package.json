@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "run-all-tests-headed": "npx bddgen & npx playwright test --headed",
-    "show-report": "npx playwright show-report"
+    "show-report": "npx playwright show-report",
+    "open-playwright-ui": "npx playwright test --ui"
   },
   "keywords": [],
   "author": "",

@@ -6,7 +6,7 @@ import { chromium } from 'playwright';
 
 const { storeVariable, getStoredVariable } = require('../../utils/global-storage').default;
 
-export default class SearchPage {
+export class SearchPage {
     page = null;
     searchLocator = null;
     searchOption = null;
@@ -136,3 +136,4 @@ export default class SearchPage {
     }
     
 }
+

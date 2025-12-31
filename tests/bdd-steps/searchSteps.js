@@ -1,5 +1,5 @@
 import { createBdd } from 'playwright-bdd';
-import SearchPage from '../page-objects/searchPage';
+import { SearchPage } from '../page-objects/SearchPage.js';
 import { PDFUtils } from '../../utils/pdf-utils';
 
 const assert = require('assert');
