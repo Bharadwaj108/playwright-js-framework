@@ -1,0 +1,24 @@
+{
+  "name": "playwright-ts-frameork",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "run-all-tests-headed": "npx bddgen & npx playwright test --headed",
+    "show-report": "npx playwright show-report"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "@playwright/test": "^1.57.0",
+    "@types/node": "^25.0.3",
+    "playwright-bdd": "^8.3.1"
+  },
+  "dependencies": {
+    "dotenv": "^17.2.1",
+    "pdf-parse": "^2.4.5",
+    "shortid": "^2.2.17"
+  }
+}

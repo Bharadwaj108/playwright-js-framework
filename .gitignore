@@ -1,0 +1,19 @@
+
+# Playwright
+node_modules/
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/playwright/.auth/
+/tempFiles/
+/.vscode/
+/tests/.DS_Store
+/.DS_Store
+/fixtures/.DS_Store
+/fixtures/expectedDataFiles/.DS_Store
+
+
+
+
+
