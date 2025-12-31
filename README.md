@@ -21,7 +21,10 @@ This framework provides a robust foundation for end‑to‑end UI automation, BD
 
 ---
 
-## 3. Project Structure
+## 📁 Project Structure
+
+The following directory structure illustrates how the framework is organised:
+
 playwright-ts-framework/
 │
 ├── tests/
@@ -67,10 +70,13 @@ playwright-ts-framework/
 ## 6. Reporting
 - HTML Reports are stored under "./reports"
 
---
+---
 
-## 6. Run tests with a specific environment:
--  Example to run test in test env "NODE_ENV=test npx playwright test --headed"
+## 7. Run tests with a specific environment:
+-  Example to run test in test env
+  ```
+    NODE_ENV=test npx playwright test --headed
+  ```
 ---
 
 
