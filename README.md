@@ -45,9 +45,11 @@ playwright-ts-framework/
 ## 4. Installation
 
 ### Clone the repository
-- ```bash
-git clone https://github.com/Bharadwaj108/playwright-ts-frameork.git
-cd playwright-ts-frameork
+  
+ ```
+ git clone https://github.com/Bharadwaj108/playwright-ts-frameork.git
+```
+
 
 ---
 
