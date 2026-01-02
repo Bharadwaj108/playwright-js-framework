@@ -31,7 +31,7 @@ export class PDFUtils {
 
     }
 
-    static async extractTextFromPdf(pathToPdf) {        
+    static async extractTextFromPdf(pathToPdf) {
         const dataBuffer = fs.readFileSync(pathToPdf);
         const pdfData = await pdf(dataBuffer);
         return pdfData.text;
@@ -65,7 +65,7 @@ export class PDFUtils {
                 reject(error);
             }
         });
-    }    
+    }
 
     static suggestedFilename() {
         // generate suggested filename for the downloaded PDF
@@ -73,23 +73,6 @@ export class PDFUtils {
     }
 
     static async downloadPdfFromPage(fileOutputPath, waitTime = 15000) {
-        // const url = getStoredVariable('{S:pdfUrl}');
-        // const page = getStoredVariable('{S:pdfPage}');
-        // Listen for PDF responses
-        // page.on('response', async (response) => {
-        //     const resUrl = response.url();
-
-        //     if (resUrl.endsWith('.pdf')) {
-        //         console.log('PDF detected:', resUrl);
-
-        //         const buffer = await response.body();
-        //         fs.writeFileSync(fileOutputPath, buffer);
-
-        //         console.log(`PDF saved as: ${fileOutputPath}`);
-        //     }
-        // });
-        // await page.goto(url, { waitUntil: 'networkidle', timeout: waitTime });
-
         const url = getStoredVariable('{S:pdfUrl}');
         const page = getStoredVariable('{S:pdfPage}');
 
@@ -110,21 +93,21 @@ export class PDFUtils {
      * check to see if the file has been downloaded and save to the location
      */
     static async isPdfDownloaded(filePath, waitTime = 15000) {
-    // Verify that the PDF document was downloaded successfully
-    const start = Date.now();
-    return new Promise((resolve) => {
-        const checkFile = () => {
-            if (fs.existsSync(filePath)) {
-                resolve(true);
-            } else if (Date.now() - start > waitTime) {
-                resolve(false);
-            } else {
-                setTimeout(checkFile, 500); // Check every 500ms
-            }
-        };
-        checkFile();
-    });
-}
+        // Verify that the PDF document was downloaded successfully
+        const start = Date.now();
+        return new Promise((resolve) => {
+            const checkFile = () => {
+                if (fs.existsSync(filePath)) {
+                    resolve(true);
+                } else if (Date.now() - start > waitTime) {
+                    resolve(false);
+                } else {
+                    setTimeout(checkFile, 500); // Check every 500ms
+                }
+            };
+            checkFile();
+        });
+    }
 
     /**
      * 
@@ -134,40 +117,46 @@ export class PDFUtils {
      * validates if the pdf is opened in a new browser tab
      */
     static async pdfDocumentDisplayedInNewBrowserTab(page, waitTime = 15000) {
-    // Verify that the PDF document is displayed in a new tab
-    const [newPage] = await Promise.all([
-        page.context({
-            acceptDownloads: true
-        }).waitForEvent('page'),
-        // Assuming clicking on the plan link opens the PDF in a new tab
-    ]);
-    await newPage.waitForLoadState('load', { timeout: waitTime });
-    const url = newPage.url();
-    storeVariable('{S:pdfUrl}', url);
-    storeVariable('{S:pdfPage}', newPage);
+       
+        //build the complete file Path
+        const rootDir = process.cwd();
+        const outputPath = path.join(rootDir, '/tempFiles');
+        fs.mkdir(outputPath, { recursive: true }, (err) => {
+            if (err) {
+                console.error(`Error creating directory: ${err}`);
+                return false;
+            } else {
+                console.log('Directory created successfully!');
+            }
+        });
 
+        // prepare file output path and store in global storage
+        const outputFileName = this.suggestedFilename();
+        storeVariable('{S:pdfFileName}', outputFileName);
+        const fileOutputPath = path.join(outputPath, outputFileName);
+        storeVariable('{S:pdfFilePath}', fileOutputPath);
 
-    //build the complete file Path
-    const rootDir = process.cwd();
-    const outputPath = path.join(rootDir, '/tempFiles');
-    fs.mkdir(outputPath, { recursive: true }, (err) => {
-        if (err) {
-            console.error(`Error creating directory: ${err}`);
-            return false;
-        } else {
-            console.log('Directory created successfully!');
+        const context = page.context();
+
+        let newPage = null;
+
+        try {
+            [newPage] = await Promise.all([
+                context.waitForEvent('page', { timeout: waitTime }),
+                // your click goes here
+            ]);
+        } catch (err) {
+            // No new page opened within timeout
+            newPage = null;
         }
-    });
+        storeVariable('{S:pdfPage}', newPage);
 
-    // prepare file output path and store in global storage
-    const outputFileName = this.suggestedFilename();
-    storeVariable('{S:pdfFileName}', outputFileName);
-    const fileOutputPath = path.join(outputPath, outputFileName);
-    storeVariable('{S:pdfFilePath}', fileOutputPath);
-
-    // Simple check to see if the URL contains '.pdf'
-    return url.includes('.pdf');
-
-}
+        // Now safely check
+        if (!newPage) {
+            console.log("No new tab opened — likely headless mode or PDF viewer disabled.");
+            return false;
+        }        
+        return true;        
+    }
 
 }

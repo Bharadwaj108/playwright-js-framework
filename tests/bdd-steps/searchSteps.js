@@ -57,6 +57,8 @@ When('User downloads the energy plan PDF document', async ({ page }) => {
   const downloadPDF = getStoredVariable('{S:pdfFilePath}');
   // Download the PDF document for the selected energy plan  
   await PDFUtils.downloadPdfFromPage(downloadPDF);  
+
+  
 });
 
 
