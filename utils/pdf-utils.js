@@ -1,10 +1,13 @@
 // import * as fs from 'fs';
 // import * as path from 'path';
-import { PDFParse } from 'pdf-parse';
+// import { PDFParse } from 'pdf-parse';
+
+// import pdf from 'pdf-parse';
 import { readFile, writeFile } from 'node:fs/promises';
+
+import pdf from 'pdf-parse-fixed';
 const fs = require('fs');
 const path = require('path');
-const pdf = require('pdf-parse');
 const { storeVariable, getStoredVariable } = require('../utils/global-storage').default;
 
 
@@ -28,21 +31,10 @@ export class PDFUtils {
 
     }
 
-    static async extractTextFromPdf(pathToPdf) {
-        // return new Promise((resolve, reject) => {
-        //     // const resolvedFilePath = path.resolve(pathToPdf);
-        //     const dataBuffer = fs.readFileSync(pathToPdf);
-        //     const parse = pdf(dataBuffer);
-        //     parse.then(function (data) {
-        //         resolve(data.text);
-        //     }).catch(err => {
-        //         reject(err);
-        //     });
-        // });
-
-        const buffer = await readFile(pathToPdf);
-        const data = new PDFParse({ data: buffer });
-        return await data.getText();
+    static async extractTextFromPdf(pathToPdf) {        
+        const dataBuffer = fs.readFileSync(pathToPdf);
+        const pdfData = await pdf(dataBuffer);
+        return pdfData.text;
     }
 
     static paresePDFtoArray(pathToPdf) {
@@ -64,8 +56,8 @@ export class PDFUtils {
                 const expectedText = await this.extractTextFromPdf(expectedFilePath);
                 const actualText = await this.extractTextFromPdf(actualFilePath);
 
-                const expectedLines = expectedText.text.toString().trim().split('\n');
-                const actualLines = actualText.text.toString().trim().split('\n');
+                const expectedLines = expectedText.toString().trim().split('\n');
+                const actualLines = actualText.toString().trim().split('\n');
 
                 const isEqual = this.comparePdfContent(actualLines, expectedLines);
                 resolve(isEqual);

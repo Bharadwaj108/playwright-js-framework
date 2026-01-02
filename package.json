@@ -4,9 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "run-all-tests-headed": "npx bddgen & npx playwright test --headed",
-    "show-report": "npx playwright show-report",
-    "open-playwright-ui": "npx playwright test --ui"
+    "test": "npx bddgen & npx playwright test --headed",
+    "test:headed": "npx bddgen & npx playwright test --headed",
+    "test:ui": "npx playwright test --ui",
+    "test:report": "npx playwright show-report"
   },
   "keywords": [],
   "author": "",
@@ -19,7 +20,7 @@
   },
   "dependencies": {
     "dotenv": "^17.2.1",
-    "pdf-parse": "^2.4.5",
+    "pdf-parse-fixed": "^1.1.1",
     "shortid": "^2.2.17"
   }
 }
