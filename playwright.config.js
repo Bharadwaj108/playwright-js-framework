@@ -32,32 +32,34 @@ export default defineConfig({
     launchOptions: {
       args: ['--start-maximized'],
     },
-    
+    headless: true,
+    userAgent:
+      "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0 Safari/537.36",
     /* Configure projects for major browsers */
     projects: [
-      {
-        name: 'chromium',
-        use: { ...devices['Desktop Chrome'] },
-      },
+    {
+      name: 'chromium',
+      use: { ...devices['Desktop Chrome'] },
+    },
 
-      {
-        name: 'firefox',
-        use: { ...devices['Desktop Firefox'] },
-      },
+    {
+      name: 'firefox',
+      use: { ...devices['Desktop Firefox'] },
+    },
 
-      {
-        name: 'webkit',
-        use: { ...devices['Desktop Safari'] },
-      },
-    ],
+    {
+      name: 'webkit',
+      use: { ...devices['Desktop Safari'] },
+    },
+  ],
 
-    // load environment variables from the .env file
-    baseURL: process.env.BASE_URL,
-    envName: process.env.ENV_NAME,
-    SMALL_WAIT_TIME: process.env.SMALL_WAIT_TIME,
-    MEDIUM_WAIT_TIME: process.env.MEDIUM_WAIT_TIME,
-    LONG_WAIT_TIME: process.env.LONG_WAIT_TIME,
-  }
+  // load environment variables from the .env file
+  baseURL: process.env.BASE_URL,
+  envName: process.env.ENV_NAME,
+  SMALL_WAIT_TIME: process.env.SMALL_WAIT_TIME,
+  MEDIUM_WAIT_TIME: process.env.MEDIUM_WAIT_TIME,
+  LONG_WAIT_TIME: process.env.LONG_WAIT_TIME,
+}
 
 });
 
