@@ -49,7 +49,14 @@ export default defineConfig({
         name: 'webkit',
         use: { ...devices['Desktop Safari'] },
       },
-    ]
+    ],
+
+    // load environment variables from the .env file
+    baseURL: process.env.BASE_URL,
+    envName: process.env.ENV_NAME,
+    SMALL_WAIT_TIME: process.env.SMALL_WAIT_TIME,
+    MEDIUM_WAIT_TIME: process.env.MEDIUM_WAIT_TIME,
+    LONG_WAIT_TIME: process.env.LONG_WAIT_TIME,
   }
 
 });

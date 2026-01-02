@@ -16,6 +16,9 @@ export class SearchPage {
     naturalgasCheckboxLocator = null;
     electricityCheckboxLocator = null;
     planLinkLocator = null;
+    smallWaitTime = null;
+    mediumWaitTime = null;
+    longWaitTime = null;
     constructor(page) {
         this.page = page;
         // init the locators        
@@ -28,6 +31,11 @@ export class SearchPage {
         this.electricityCheckboxLocator = page.getByRole('checkbox', { name: 'Electricity' });
         this.planLinkLocator = (planName) => page.getByRole('link', { name: planName });
 
+        // load the wait times from environment variables
+        this.smallWaitTime = parseInt(process.env.SMALL_WAIT_TIME);
+        this.mediumWaitTime = parseInt(process.env.MEDIUM_WAIT_TIME);
+        this.longWaitTime = parseInt(process.env.LONG_WAIT_TIME);
+
     }
 
     async navigatetoEnergyCompareSearchPage() {
@@ -38,17 +46,18 @@ export class SearchPage {
     /**
      * 
      * @param {string} address
+     * @param {number} waitTime
      * Search for the valid address provided 
      * Assuming : The provided address is only valid
      */
-    async searchValidAddress(address) {
+    async searchValidAddress(address, waitTime = this.mediumWaitTime) {
         // enter the address in the search box 
         await this.searchLocator.click();
         await this.searchLocator.fill(address);
-        await this.searchOption(address).waitFor({ state: 'visible', timeout: 15000 });
+        await this.searchOption(address).waitFor({ state: 'visible', timeout: waitTime });
         await this.searchOption(address).click();
         //wait for the tick mark to appear
-        await this.tickLocator.waitFor({ state: 'visible', timeout: 15000 });
+        await this.tickLocator.waitFor({ state: 'visible', timeout: waitTime });
     }
 
     /**
@@ -62,18 +71,18 @@ export class SearchPage {
     }
 
     /**
-     * 
+     * @param {number} waitTime
      * @returns 
+     * 
      * returns a boolean value based on if the search table results is visible or not
      */
-    async isResultsTableVisible() {
+    async isResultsTableVisible(waitTime = this.mediumWaitTime) {
         // return true if results table is visible
-        await this.resultsTableLocator.waitFor({ state: 'visible', timeout: 15000 });
+        await this.resultsTableLocator.waitFor({ state: 'visible', timeout: waitTime });
         return await this.resultsTableLocator.isVisible();
     }
 
     /**
-     * 
      * @returns 
      * returns a boolean value based on if the search table rows are visible or not
      */
@@ -83,7 +92,13 @@ export class SearchPage {
         return rowCount > 0;
     }
 
-    async applyFilter(filterType, waitTime = 15000) {
+    /**
+     * 
+     * @param {string} filterType 
+     * @param {number} waitTime 
+     * Apply filter on the search results based on the filterType provided
+     */
+    async applyFilter(filterType, waitTime = this.mediumWaitTime) {
         // Apply filter based on filterType
         if (filterType === 'Natural Gas') {
             await this.electricityCheckboxLocator.uncheck();
@@ -96,22 +111,23 @@ export class SearchPage {
 
     /**
      * 
-     * @param {*} filterType 
-     * @param {*} energyTypeColIndex 
+     * @param {string} filterType 
+     * @param {number} energyTypeColIndex 
+     * @param {number} waitTime
      * @returns 
      * verify if the table results contains the applied filter values
      */
-    async verifyPlansInResults(filterType, energyTypeColIndex = 1) {
+    async verifyPlansInResults(filterType, energyTypeColIndex = 1, waitTime = this.smallWaitTime) {
         // Verify that all displayed plans are for the specified energy type    
         const rowCount = await this.getNumberOfResults();
         // first row is a theader row, so start from 1
         for (let i = 1; i <= rowCount - 1; i++) {
             const rowLocator = this.resultRowsLocator.nth(i);
-            await rowLocator.waitFor({ state: 'visible', timeout: 5000 }).then(async () => {
+            await rowLocator.waitFor({ state: 'visible', timeout: waitTime }).then(async () => {
                 console.log(`Row ${i} Energy Type Row is visible`);
             });
             const energyTypeCell = rowLocator.locator('//td').nth(energyTypeColIndex); // assuming energy type is in the specified column index    
-            await energyTypeCell.waitFor({ state: 'visible', timeout: 5000 }).then(async () => {
+            await energyTypeCell.waitFor({ state: 'visible', timeout: waitTime }).then(async () => {
                 console.log(`Row ${i} Col ${energyTypeColIndex} Energy Type Cell is visible`);
             });
             const energyTypeText = await energyTypeCell.innerText();
@@ -128,7 +144,7 @@ export class SearchPage {
      * @param {number} waitTime
      * click on the specified energy plan from the search results 
      */
-    async clickOnEnergyPlan(planName, waitTime = 15000) {
+    async clickOnEnergyPlan(planName, waitTime = this.mediumWaitTime) {
         // Click on the specified energy plan from the search results        
         const planLinkLocator = this.planLinkLocator(planName);
         await planLinkLocator.waitFor({ state: 'visible', timeout: waitTime });
