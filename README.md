@@ -78,10 +78,3 @@ playwright-ts-framework/
     NODE_ENV=test npx playwright test --headed
   ```
 ---
-
-
-
-
-
-
- 
