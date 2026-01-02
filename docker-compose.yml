@@ -1,0 +1,9 @@
+version: "3.9"
+
+services:
+  playwright-tests:
+    build: .
+    container_name: playwright-tests
+    volumes:
+      - ./reports:/app/reports
+    command: ["npm", "run", "test"]

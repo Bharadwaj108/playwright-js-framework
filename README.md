@@ -78,3 +78,18 @@ playwright-ts-framework/
     NODE_ENV=test npx playwright test --headed
   ```
 ---
+
+## 7. Docker CI\CD
+### Build the image
+```
+docker build -t playwright-tests
+```
+###  Run the tests
+```
+docker run --rm playwright-tests
+```
+### Run with mounted reports
+```
+docker-compose up --build
+```
+---

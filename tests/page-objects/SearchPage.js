@@ -148,8 +148,13 @@ export class SearchPage {
         // Click on the specified energy plan from the search results        
         const planLinkLocator = this.planLinkLocator(planName);
         await planLinkLocator.waitFor({ state: 'visible', timeout: waitTime });
+        const href = await planLinkLocator.getAttribute('href');
+        // when the link is clicked and pdf is opened in new tab store the page url in global storage
+        // there is no direct way to store the pdf page url in the new tab after clicking due to the way the application is built
+        // later use this url and new page object to download the pdf
+        storeVariable('{S:pdfUrl}', href);
         await planLinkLocator.click();
     }
-    
+
 }
 
